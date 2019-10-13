@@ -1,4 +1,5 @@
-import face_alignment as face_alignment
+#!/usr/bin/env python
+import face_alignment
 import cv2
 import numpy as np
 from glob import glob
@@ -6,13 +7,13 @@ from pathlib import PurePath, Path
 from matplotlib import pyplot as plt
 
 def run(dir_faceA, dir_faceB):
-    dir_bm_faceA_eyes = "{dir_faceA}-binary_masks/eyes"
-    dir_bm_faceB_eyes = "{dir_faceB}-binary_masks/eyes"
+    dir_bm_faceA_eyes = "{dir_faceA}/binary_masks_eyes2"
+    dir_bm_faceB_eyes = "{dir_faceB}/binary_masks_eyes2"
 
-    fns_faceA = glob(f"{dir_faceA}/*.*")
-    fns_faceB = glob(f"{dir_faceB}/*.*")
+    fns_faceA = glob(f"{dir_faceA}/raw_faces/*.*")
+    fns_faceB = glob(f"{dir_faceB}/raw_faces/*.*")
 
-    fa = face_alignment.face_align.FaceAlignment(face_alignment.LandmarksType._2D, enable_cuda=True, flip_input=False)
+    fa = face_alignment.FaceAlignment(face_alignment.LandmarksType._2D, flip_input=False)
     # !mkdir -p binary_masks/faceA_eyes
     Path(f"{dir_bm_faceA_eyes}").mkdir(parents=True, exist_ok=True)
     # !mkdir -p binary_masks/faceB_eyes
