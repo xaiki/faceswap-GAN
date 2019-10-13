@@ -6,4 +6,5 @@ RUN apt-get update -qq -y \
   && apt-get clean \
   && rm -rf /var/lib/apt/lists/*
 
+RUN pip install keras numpy matplotlib moviepy
 
