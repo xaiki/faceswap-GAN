@@ -10,7 +10,7 @@ from moviepy.editor import VideoFileClip
 from umeyama import umeyama
 import mtcnn_detect_face
 
-global dest
+dest, frames, save_interval, pnet, rnet, onet = (None, None, None, None, None, None)
 
 def create_mtcnn(sess, model_path):
     if not model_path:
@@ -85,9 +85,9 @@ def process_mtcnn_bbox(bboxes, im_shape):
         bboxes[i,0:4] = new_x0, new_y1, new_x1, new_y0
     return bboxes
 
-def process_video(input_img): 
-    global frames, save_interval
-    global pnet, rnet, onet
+def process_video(input_img):
+    global frames, dest, save_interval
+
     minsize = 30 # minimum size of face
     detec_threshold = 0.7
     threshold = [0.6, 0.7, detec_threshold]  # three steps's threshold
@@ -128,28 +128,29 @@ def process_video(input_img):
     return np.zeros((3,3,3))
 
 def run(origin, destination):
+    global dest, frames, save_interval
+
     WEIGHTS_PATH = "./mtcnn_weights/"
     sess = K.get_session()
     with sess.as_default():
         global pnet, rnet, onet
 
+    global pnet, rnet, onet
     pnet, rnet, onet = create_mtcnn(sess, WEIGHTS_PATH)
 
     pnet = K.function([pnet.layers['data']],[pnet.layers['conv4-2'], pnet.layers['prob1']])
     rnet = K.function([rnet.layers['data']],[rnet.layers['conv5-2'], rnet.layers['prob1']])
     onet = K.function([onet.layers['data']],[onet.layers['conv6-2'], onet.layers['conv6-3'], onet.layers['prob1']])
 
-    global frames
+    # configuration
+    save_interval = 6 # perform face detection every {save_interval} frames
+    fn_input_video = origin
     frames = 0
     dest = destination
 
     Path(f"{dest}/aligned_faces").mkdir(parents=True, exist_ok=True)
     Path(f"{dest}/raw_faces").mkdir(parents=True, exist_ok=True)
     Path(f"{dest}/binary_masks_eyes").mkdir(parents=True, exist_ok=True)
-
-    # configuration
-    save_interval = 6 # perform face detection every {save_interval} frames
-    fn_input_video = origin
 
     output = 'dummy.mp4'
     clip1 = VideoFileClip(fn_input_video)
