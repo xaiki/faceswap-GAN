@@ -279,15 +279,15 @@ def create_mtcnn(sess, model_path):
     if not model_path:
         model_path,_ = os.path.split(os.path.realpath(__file__))
 
-    with tf.variable_scope('pnet'):
+    with tf.variable_scope('pnet', reuse=tf.AUTO_REUSE):
         data = tf.placeholder(tf.float32, (None,None,None,3), 'input')
         pnet = PNet({'data':data})
         pnet.load(os.path.join(model_path, 'det1.npy'), sess)
-    with tf.variable_scope('rnet'):
+    with tf.variable_scope('rnet', reuse=tf.AUTO_REUSE):
         data = tf.placeholder(tf.float32, (None,24,24,3), 'input')
         rnet = RNet({'data':data})
         rnet.load(os.path.join(model_path, 'det2.npy'), sess)
-    with tf.variable_scope('onet'):
+    with tf.variable_scope('onet', reuse=tf.AUTO_REUSE):
         data = tf.placeholder(tf.float32, (None,48,48,3), 'input')
         onet = ONet({'data':data})
         onet.load(os.path.join(model_path, 'det3.npy'), sess)
