@@ -6,5 +6,5 @@ RUN apt-get update -qq -y \
   && apt-get clean \
   && rm -rf /var/lib/apt/lists/*
 
-RUN pip install keras numpy matplotlib moviepy torch scikit-image
+RUN pip install keras keras_vggface numpy matplotlib moviepy torch scikit-image
 
