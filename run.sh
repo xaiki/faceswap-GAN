@@ -1,3 +1,3 @@
 #!/bin/sh
-docker run -it -p 9999:8888 --rm -v $PWD:/tf -w /tf faceswap-gan $@
+docker run --runtime nvidia -it -p 9999:8888 --rm -v $PWD:/tf -v $PWD/cache:/root/.cache -w /tf faceswap-gan $@
 
