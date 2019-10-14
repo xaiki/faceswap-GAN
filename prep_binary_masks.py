@@ -7,11 +7,13 @@ from pathlib import PurePath, Path
 from matplotlib import pyplot as plt
 
 def run(dir_faceA, dir_faceB):
-    dir_bm_faceA_eyes = "{dir_faceA}/binary_masks_eyes2"
-    dir_bm_faceB_eyes = "{dir_faceB}/binary_masks_eyes2"
+    dir_bm_faceA_eyes = f"{dir_faceA}/binary_masks_eyes2"
+    dir_bm_faceB_eyes = f"{dir_faceB}/binary_masks_eyes2"
 
     fns_faceA = glob(f"{dir_faceA}/raw_faces/*.*")
     fns_faceB = glob(f"{dir_faceB}/raw_faces/*.*")
+
+    print('faces', dir_faceA, dir_faceB, dir_bm_faceA_eyes, dir_bm_faceB_eyes)
 
     fa = face_alignment.FaceAlignment(face_alignment.LandmarksType._2D, flip_input=False)
     # !mkdir -p binary_masks/faceA_eyes
@@ -63,8 +65,8 @@ def run(dir_faceA, dir_faceB):
                 fns_face_not_detected.append(fn)
 
             plt.imsave(fname=f"{save_path}/{raw_fn}", arr=mask, format="jpg")
-    num_faceA = len(glob(dir_faceA+"/*.*"))
-    num_faceB = len(glob(dir_faceB+"/*.*"))
+    num_faceA = len(glob(f"{dir_faceA}/*.*"))
+    num_faceB = len(glob(f"{dir_faceB}/*.*"))
 
     print("Nuber of processed images: "+ str(num_faceA + num_faceB))
     print("Number of image(s) with no face detected: " + str(len(fns_face_not_detected)))
